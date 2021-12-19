@@ -1,7 +1,7 @@
 const std = @import("std");
 const w4 = @import("wasm4.zig");
 
-// Struct point (f32 x, f32 y)
+/// Struct point (f32 x, f32 y)
 pub const point_t = struct {
     x: f32,
     y: f32,

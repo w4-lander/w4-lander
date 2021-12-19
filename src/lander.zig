@@ -73,6 +73,7 @@ fn rotate(p: point_t, theta: f32) point_t{
 }
 
 pub fn landerDraw() void {
+    w4.DRAW_COLORS.* = 0x0043;
     for (points) | _, i | {
         var cur = rotate(points[i], ship.theta);
         var next = rotate(points[(i + 1) % 3], ship.theta);

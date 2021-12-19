@@ -9,10 +9,9 @@ export fn start() void {
     doge.start();
 }
 
-
 export fn update() void {
     lander.landerUpdate();
-    doge.update();
+    doge.update(frame, utils.point_t {.x = lander.ship.x, .y = lander.ship.y} );
 
     if (@mod(frame, 60) == 0) {
         utils.log("Current frame = {}", .{frame});
