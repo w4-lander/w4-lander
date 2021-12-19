@@ -11,11 +11,10 @@ export fn start() void {
 
 export fn update() void {
     lander.landerUpdate();
-    doge.update(frame, utils.point_t {.x = lander.ship.x, .y = lander.ship.y} );
+    doge.update(frame, utils.Point{ .x = lander.ship.x, .y = lander.ship.y });
 
     if (@mod(frame, 60) == 0) {
         utils.log("Current frame = {}", .{frame});
     }
     frame += 1;
 }
-

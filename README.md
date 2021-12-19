@@ -1,4 +1,5 @@
 # w4-lander
+
 ![](https://media.giphy.com/media/dSgYBRG11Xk8VZdsKw/giphy.gif)
 
 A lunar-lander type retro video game, written in Zig for the WASM-4 fantasy console. Play on the web, or try out the native apps! ✨
@@ -14,4 +15,10 @@ just run-native  # Run the game in the native runtime
 just watch       # Run the game in a browser, rebuilding on code change
 just bundle      # Create HTML, Windows, macOS, and Linux release artifacts
 just clean       # Clean all generated files
+```
+
+To format code automatically, run the command:
+
+```shell
+zig fmt .
 ```

@@ -1,28 +1,27 @@
 const w4 = @import("wasm4.zig");
 const math = @import("std").math;
-const point_t = @import("utils.zig").point_t;
+const Point = @import("utils.zig").Point;
 
 const GRAVITY = 0.0005;
 const TURN_POWER = 0.1;
 const THURST_FORCE = 0.001;
 
-
-const ship_t = struct {
+const Ship = struct {
     x: f32,
     y: f32,
     dx: f32,
     dy: f32,
     theta: f32,
-    points: [3]point_t,
+    points: [3]Point,
 };
 
-const points = [_]point_t{
-    point_t {.x = -2, .y = -4},
-    point_t {.x = 10, .y = 0}, 
-    point_t {.x = -2, .y = 4},
+const points = [_]Point{
+    Point{ .x = -2, .y = -4 },
+    Point{ .x = 10, .y = 0 },
+    Point{ .x = -2, .y = 4 },
 };
 
-pub var ship = ship_t {
+pub var ship = Ship{
     .x = 10,
     .y = 10,
     .dx = 0.1,
@@ -66,15 +65,15 @@ pub fn landerUpdate() void {
     landerDraw();
 }
 
-fn rotate(p: point_t, theta: f32) point_t{
+fn rotate(p: Point, theta: f32) Point {
     var rx = p.x * math.cos(theta) - p.y * math.sin(theta);
     var ry = p.y * math.cos(theta) + p.x * math.sin(theta);
-    return point_t {.x = rx, .y = ry};
+    return Point{ .x = rx, .y = ry };
 }
 
 pub fn landerDraw() void {
     w4.DRAW_COLORS.* = 0x0043;
-    for (points) | _, i | {
+    for (points) |_, i| {
         var cur = rotate(points[i], ship.theta);
         var next = rotate(points[(i + 1) % 3], ship.theta);
         var x1 = @floatToInt(i32, cur.x + ship.x);
