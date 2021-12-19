@@ -15,7 +15,7 @@ run-native: build
 
 bundle: build
 	w4 bundle {{CART}} --title "Lander" \
-		--html bundle/lander.html \
+		--html bundle/index.html \
 		--windows bundle/lander-windows.exe \
 		--mac bundle/lander-mac \
 		--linux bundle/lander-linux
