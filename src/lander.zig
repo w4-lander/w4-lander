@@ -1,6 +1,7 @@
 const w4 = @import("wasm4.zig");
 const math = @import("std").math;
-const Vec2 = @import("utils.zig").Vec2;
+const utils = @import("utils.zig");
+const Vec2 = utils.Vec2;
 
 const GRAVITY = 0.0005;
 const TURN_POWER = 0.1;
@@ -16,6 +17,11 @@ pub const Ship = struct {
     pos: Vec2(f32),
     vel: Vec2(f32),
     theta: f32,
+
+    pub fn reset(self: *Ship) void {
+        self.pos = .{ .x = 10, .y = 10 };
+        self.vel = .{ .x = 0.1, .y = 0 };
+    }
 
     fn thrust(self: *Ship) void {
         self.vel.x += THURST_FORCE * math.cos(self.theta);
@@ -50,16 +56,25 @@ pub const Ship = struct {
         self.pos.y += self.vel.y;
     }
 
+    pub fn getPoints(self: *Ship) [3]Vec2(i32) {
+        var ret: [3]Vec2(i32) = undefined;
+        for (POINTS) |point, i| {
+            var cur: Vec2(f32) = point.rotate(self.theta);
+            const x = @floatToInt(i32, cur.x + self.pos.x);
+            const y = @floatToInt(i32, cur.y + self.pos.y);
+            const p = Vec2(i32).init(x, y);
+            ret[i] = p;
+        }
+        return ret;
+    }
+
     pub fn draw(self: *Ship) void {
         w4.DRAW_COLORS.* = 0x0043;
-        for (POINTS) |_, i| {
-            var cur = POINTS[i].rotate(self.theta);
-            var next = POINTS[(i + 1) % 3].rotate(self.theta);
-            var x1 = @floatToInt(i32, cur.x + self.pos.x);
-            var y1 = @floatToInt(i32, cur.y + self.pos.y);
-            var x2 = @floatToInt(i32, next.x + self.pos.x);
-            var y2 = @floatToInt(i32, next.y + self.pos.y);
-            w4.line(x1, y1, x2, y2);
+        var realPoints = getPoints(self);
+        for (realPoints) |_, i| {
+            var cur = realPoints[i];
+            var next = realPoints[(i + 1) % 3];
+            w4.line(cur.x, cur.y, next.x, next.y);
         }
     }
 };

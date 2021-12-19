@@ -4,8 +4,8 @@ const w4 = @import("wasm4.zig");
 
 /// Represents a 2D vector with floating-point coordinates.
 pub fn Vec2(comptime T: type) type {
-    if (T != f32 and T != f64) {
-        @compileError("Vec2 only implemented for f32 and f64");
+    if (T != f32 and T != f64 and T != i32) {
+        @compileError("Vec2 only implemented for f32 and f64 and i32");
     }
 
     return struct {
@@ -19,9 +19,48 @@ pub fn Vec2(comptime T: type) type {
 
         /// Rotate the vector counterclockwise by a given angle.
         pub fn rotate(self: Vec2(T), theta: T) Vec2(T) {
+            if (T != f32 and T != f64) {
+                @compileError("Vec2 rotation only implemented for f32 and f64");
+            }
             var rx = self.x * math.cos(theta) - self.y * math.sin(theta);
             var ry = self.y * math.cos(theta) + self.x * math.sin(theta);
             return .{ .x = rx, .y = ry };
+        }
+    };
+}
+
+/// Represents a Line with floating-point coordinates.
+pub fn Line(comptime T: type) type {
+    if (T != i32) {
+        @compileError("Line only implemented for i32");
+    }
+
+    return struct {
+        A: Vec2(T),
+        B: Vec2(T),
+
+        /// Initialize a new Line.
+        pub fn init(A: Vec2(T), B: Vec2(T)) Line(T) {
+            return .{ .A = A, .B = B };
+        }
+
+        fn ccw(A: Vec2(T), B: Vec2(T), C: Vec2(T)) bool {
+            return (C.y - A.y) * (B.x - A.x) > (B.y - A.y) * (C.x - A.x);
+        }
+
+        /// Verify points are all on the same side of the line
+        pub fn verifyPoints(self: Line(T), points: [3]Vec2(i32)) bool {
+            var direction = ccw(self.A, self.B, points[0]);
+            for (points) |point| {
+                if (ccw(self.A, self.B, point) != direction) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        pub fn draw(self: Line(T)) void {
+            w4.line(self.A.x, self.A.y, self.B.x, self.B.y);
         }
     };
 }

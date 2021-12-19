@@ -2,6 +2,7 @@ const w4 = @import("wasm4.zig");
 const Ship = @import("lander.zig").Ship;
 const Doge = @import("doge_meteor.zig").Doge;
 const utils = @import("utils.zig");
+const World = @import("world.zig");
 
 var frame: u32 = 0;
 var doges: [2]Doge = undefined;
@@ -32,6 +33,8 @@ export fn update() void {
     }
 
     ship.draw();
+    World.draw();
+    World.check(&ship);
     for (doges) |*doge| {
         doge.draw();
     }
