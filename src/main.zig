@@ -1,14 +1,22 @@
 const w4 = @import("wasm4.zig");
-const lander = @import("lander.zig");
+const Ship = @import("lander.zig").Ship;
 const Doge = @import("doge_meteor.zig").Doge;
 const utils = @import("utils.zig");
 
 var frame: u32 = 0;
 var doges: [2]Doge = undefined;
+var ship: Ship = undefined;
 
 export fn start() void {
-    doges[0] = Doge.init(100, 100);
-    doges[1] = Doge.init(50, 100);
+    doges = [_]Doge{
+        Doge.init(.{ .x = 100, .y = 100 }),
+        Doge.init(.{ .x = 50, .y = 100 }),
+    };
+    ship = Ship{
+        .pos = .{ .x = 10, .y = 10 },
+        .vel = .{ .x = 0.1, .y = 0 },
+        .theta = 0,
+    };
 }
 
 export fn update() void {
@@ -16,13 +24,14 @@ export fn update() void {
         utils.log("Current frame = {}", .{frame});
     }
 
-    lander.landerUpdate();
+    ship.update();
     if (@mod(frame, 10) == 0) {
         for (doges) |*doge| {
-            doge.move_towards(.{ .x = lander.ship.x, .y = lander.ship.y });
+            doge.move_towards(ship.pos);
         }
     }
 
+    ship.draw();
     for (doges) |*doge| {
         doge.draw();
     }

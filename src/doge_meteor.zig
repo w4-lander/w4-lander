@@ -5,17 +5,15 @@ const w4 = @import("wasm4.zig");
 const math = @import("std").math;
 const lander = @import("lander.zig");
 const utils = @import("utils.zig");
-const Point = utils.Point;
+const Vec2 = utils.Vec2;
 
 /// Struct for doge object
 pub const Doge = struct {
-    pos: Point,
+    pos: Vec2,
 
     /// Initialize starting position coordinates
-    pub fn init(x: f32, y: f32) Doge {
-        return Doge{
-            .pos = Point{ .x = x, .y = y },
-        };
+    pub fn init(pos: Vec2) Doge {
+        return Doge{ .pos = pos };
     }
 
     /// Moves doge up by one pixel
@@ -28,12 +26,11 @@ pub const Doge = struct {
     }
 
     /// Moves doge towards target object by 1 unit (unit = pixel)
-    pub fn move_towards(self: *Doge, target_pos: Point) void {
+    pub fn move_towards(self: *Doge, target_pos: Vec2) void {
         var x_displ = target_pos.x - self.pos.x;
         var y_displ = target_pos.y - self.pos.y;
         var dx = x_displ / math.sqrt(x_displ * x_displ + y_displ * y_displ);
         var dy = y_displ / math.sqrt(x_displ * x_displ + y_displ * y_displ);
-        utils.log("x displacement = {}", .{dx});
         self.pos.x = self.pos.x + dx;
         self.pos.y = self.pos.y + dy;
     }

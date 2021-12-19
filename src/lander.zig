@@ -1,85 +1,65 @@
 const w4 = @import("wasm4.zig");
 const math = @import("std").math;
-const Point = @import("utils.zig").Point;
+const Vec2 = @import("utils.zig").Vec2;
 
 const GRAVITY = 0.0005;
 const TURN_POWER = 0.1;
 const THURST_FORCE = 0.001;
 
-const Ship = struct {
-    x: f32,
-    y: f32,
-    dx: f32,
-    dy: f32,
+const POINTS = [_]Vec2{
+    Vec2{ .x = -2, .y = -4 },
+    Vec2{ .x = 10, .y = 0 },
+    Vec2{ .x = -2, .y = 4 },
+};
+
+pub const Ship = struct {
+    pos: Vec2,
+    vel: Vec2,
     theta: f32,
-    points: [3]Point,
+
+    fn thrust(self: *Ship) void {
+        self.vel.x += THURST_FORCE * math.cos(self.theta);
+        self.vel.y += THURST_FORCE * math.sin(self.theta);
+    }
+
+    fn turnLeft(self: *Ship) void {
+        self.theta -= TURN_POWER;
+    }
+
+    fn turnRight(self: *Ship) void {
+        self.theta += TURN_POWER;
+    }
+
+    pub fn update(self: *Ship) void {
+        const gamepad = w4.GAMEPAD1.*;
+
+        if (gamepad & w4.BUTTON_UP != 0) {
+            self.thrust();
+        }
+        if (gamepad & w4.BUTTON_RIGHT != 0) {
+            self.turnRight();
+        }
+        if (gamepad & w4.BUTTON_LEFT != 0) {
+            self.turnLeft();
+        }
+
+        //gravity
+        self.vel.y += GRAVITY;
+
+        self.pos.x += self.vel.x;
+        self.pos.y += self.vel.y;
+    }
+
+    pub fn draw(self: *Ship) void {
+        w4.DRAW_COLORS.* = 0x0043;
+        for (POINTS) |_, i| {
+            var cur = POINTS[i].rotate(self.theta);
+            var next = POINTS[(i + 1) % 3].rotate(self.theta);
+            var x1 = @floatToInt(i32, cur.x + self.pos.x);
+            var y1 = @floatToInt(i32, cur.y + self.pos.y);
+            var x2 = @floatToInt(i32, next.x + self.pos.x);
+            var y2 = @floatToInt(i32, next.y + self.pos.y);
+            w4.line(x1, y1, x2, y2);
+        }
+    }
 };
-
-const points = [_]Point{
-    Point{ .x = -2, .y = -4 },
-    Point{ .x = 10, .y = 0 },
-    Point{ .x = -2, .y = 4 },
-};
-
-pub var ship = Ship{
-    .x = 10,
-    .y = 10,
-    .dx = 0.1,
-    .dy = 0,
-    .theta = 0,
-    .points = points,
-};
-
-pub fn thrust() void {
-    ship.dx += THURST_FORCE * math.cos(ship.theta);
-    ship.dy += THURST_FORCE * math.sin(ship.theta);
-}
-
-pub fn turnLeft() void {
-    ship.theta -= TURN_POWER;
-}
-
-pub fn turnRight() void {
-    ship.theta += TURN_POWER;
-}
-
-pub fn landerUpdate() void {
-    const gamepad = w4.GAMEPAD1.*;
-
-    if (gamepad & w4.BUTTON_UP != 0) {
-        thrust();
-    }
-    if (gamepad & w4.BUTTON_RIGHT != 0) {
-        turnRight();
-    }
-    if (gamepad & w4.BUTTON_LEFT != 0) {
-        turnLeft();
-    }
-
-    //gravity
-    ship.dy += GRAVITY;
-
-    ship.x += ship.dx;
-    ship.y += ship.dy;
-
-    landerDraw();
-}
-
-fn rotate(p: Point, theta: f32) Point {
-    var rx = p.x * math.cos(theta) - p.y * math.sin(theta);
-    var ry = p.y * math.cos(theta) + p.x * math.sin(theta);
-    return Point{ .x = rx, .y = ry };
-}
-
-pub fn landerDraw() void {
-    w4.DRAW_COLORS.* = 0x0043;
-    for (points) |_, i| {
-        var cur = rotate(points[i], ship.theta);
-        var next = rotate(points[(i + 1) % 3], ship.theta);
-        var x1 = @floatToInt(i32, cur.x + ship.x);
-        var y1 = @floatToInt(i32, cur.y + ship.y);
-        var x2 = @floatToInt(i32, next.x + ship.x);
-        var y2 = @floatToInt(i32, next.y + ship.y);
-        w4.line(x1, y1, x2, y2);
-    }
-}
