@@ -9,10 +9,10 @@ const Vec2 = utils.Vec2;
 
 /// Struct for doge object
 pub const Doge = struct {
-    pos: Vec2,
+    pos: Vec2(f32),
 
     /// Initialize starting position coordinates
-    pub fn init(pos: Vec2) Doge {
+    pub fn init(pos: Vec2(f32)) Doge {
         return Doge{ .pos = pos };
     }
 
@@ -26,7 +26,7 @@ pub const Doge = struct {
     }
 
     /// Moves doge towards target object by 1 unit (unit = pixel)
-    pub fn move_towards(self: *Doge, target_pos: Vec2) void {
+    pub fn move_towards(self: *Doge, target_pos: Vec2(f32)) void {
         var x_displ = target_pos.x - self.pos.x;
         var y_displ = target_pos.y - self.pos.y;
         var dx = x_displ / math.sqrt(x_displ * x_displ + y_displ * y_displ);

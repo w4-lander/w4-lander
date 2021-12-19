@@ -6,15 +6,15 @@ const GRAVITY = 0.0005;
 const TURN_POWER = 0.1;
 const THURST_FORCE = 0.001;
 
-const POINTS = [_]Vec2{
-    Vec2{ .x = -2, .y = -4 },
-    Vec2{ .x = 10, .y = 0 },
-    Vec2{ .x = -2, .y = 4 },
+const POINTS = [_]Vec2(f32){
+    .{ .x = -2, .y = -4 },
+    .{ .x = 10, .y = 0 },
+    .{ .x = -2, .y = 4 },
 };
 
 pub const Ship = struct {
-    pos: Vec2,
-    vel: Vec2,
+    pos: Vec2(f32),
+    vel: Vec2(f32),
     theta: f32,
 
     fn thrust(self: *Ship) void {
