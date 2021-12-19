@@ -1,14 +1,11 @@
 const w4 = @import("wasm4.zig");
 const math = @import("std").math;
+const point_t = @import("utils.zig").point_t;
 
 const GRAVITY = 0.0005;
 const TURN_POWER = 0.1;
 const THURST_FORCE = 0.001;
 
-const point_t = struct {
-    x: f32,
-    y: f32,
-};
 
 const ship_t = struct {
     x: f32,
