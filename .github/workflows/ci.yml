@@ -31,7 +31,9 @@ jobs:
           name: Cartridge
           path: zig-out/lib/cart.wasm
 
+      - run: mkdir public && mv bundle/index.html public/
+
       - uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./bundle
+          publish_dir: ./public
