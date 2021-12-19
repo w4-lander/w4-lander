@@ -1,4 +1,5 @@
 # w4-lander
+![](https://media.giphy.com/media/dSgYBRG11Xk8VZdsKw/giphy.gif)
 
 A lunar-lander type retro video game, written in Zig for the WASM-4 fantasy console. Play on the web, or try out the native apps! ✨
 
