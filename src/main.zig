@@ -17,6 +17,7 @@ export fn start() void {
         .pos = .{ .x = 10, .y = 10 },
         .vel = .{ .x = 0.1, .y = 0 },
         .theta = 0,
+        .landed = 0,
     };
 }
 
@@ -31,8 +32,6 @@ export fn update() void {
             doge.move_towards(ship.pos);
         }
     }
-
-    ship.draw();
     World.draw();
     World.check(&ship);
     for (doges) |*doge| {

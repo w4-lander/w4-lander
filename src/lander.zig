@@ -17,10 +17,19 @@ pub const Ship = struct {
     pos: Vec2(f32),
     vel: Vec2(f32),
     theta: f32,
+    landed: i32,
 
-    pub fn reset(self: *Ship) void {
-        self.pos = .{ .x = 10, .y = 10 };
-        self.vel = .{ .x = 0.1, .y = 0 };
+    fn checkProperLanding(self: *Ship) bool {
+        const degrees = @mod(self.theta * 57.2958, 360.0);
+        return degrees > 265 and degrees < 285 and self.vel.y < 0.02 and self.vel.y < 0.02;
+    }
+
+    pub fn land(self: *Ship) void {
+        if (checkProperLanding(self)) {
+            self.landed = 1;
+        } else {
+            self.landed = 2;
+        }
     }
 
     fn thrust(self: *Ship) void {
@@ -37,9 +46,21 @@ pub const Ship = struct {
     }
 
     pub fn update(self: *Ship) void {
+        if (self.landed == 1) {
+            w4.text("Success!", 10, 10);
+            return;
+        }
+        if (self.landed == 2) {
+            w4.text("Failed!", 10, 10);
+            return;
+        }
+
         const gamepad = w4.GAMEPAD1.*;
 
+        w4.DRAW_COLORS.* = 0x0043;
+
         if (gamepad & w4.BUTTON_UP != 0) {
+            w4.DRAW_COLORS.* = 0x0044;
             self.thrust();
         }
         if (gamepad & w4.BUTTON_RIGHT != 0) {
@@ -54,6 +75,8 @@ pub const Ship = struct {
 
         self.pos.x += self.vel.x;
         self.pos.y += self.vel.y;
+
+        draw(self);
     }
 
     pub fn getPoints(self: *Ship) [3]Vec2(i32) {
@@ -69,7 +92,6 @@ pub const Ship = struct {
     }
 
     pub fn draw(self: *Ship) void {
-        w4.DRAW_COLORS.* = 0x0043;
         var realPoints = getPoints(self);
         for (realPoints) |_, i| {
             var cur = realPoints[i];

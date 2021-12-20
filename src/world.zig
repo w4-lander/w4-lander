@@ -12,14 +12,14 @@ pub fn check(ship: *Ship) void {
     var points = Ship.getPoints(ship);
     for (ground) |line| {
         if (!line.verifyPoints(points)) {
-            w4.trace("Collision Detected: Reseting");
-            ship.reset();
+            ship.land();
         }
     }
 }
 
 ///Draws world
 pub fn draw() void {
+    w4.DRAW_COLORS.* = 0x0044;
     for (ground) |line| {
         line.draw();
     }
