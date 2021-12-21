@@ -93,6 +93,15 @@ pub const Ship = struct {
     }
 
     pub fn draw(self: *Ship) void {
+        if (self.pos.y >= 200) {
+            ScaledDrawer.SCALE = 1;
+            ScaledDrawer.OFF_X = self.pos.x - 80;
+            ScaledDrawer.OFF_Y = self.pos.y - 80;
+        } else {
+            ScaledDrawer.SCALE = 0.5;
+            ScaledDrawer.OFF_X = 0;
+            ScaledDrawer.OFF_Y = 0;
+        }
         var realPoints = getPoints(self);
         for (realPoints) |_, i| {
             var cur = realPoints[i];
