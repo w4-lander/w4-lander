@@ -49,10 +49,13 @@ pub fn Line(comptime T: type) type {
             return (C.y - A.y) * (B.x - A.x) > (B.y - A.y) * (C.x - A.x);
         }
 
-        /// Verify points are all on the same side of the line
+        /// Verify points are all on the same side of the line or at a different x-coordinate
         pub fn verifyPoints(self: Line(T), points: [3]Vec2(i32)) bool {
             var direction = ccw(self.A, self.B, points[0]);
             for (points) |point| {
+                if (point.x > self.B.x or point.x < self.A.x) {
+                    continue;
+                }
                 if (ccw(self.A, self.B, point) != direction) {
                     return false;
                 }
