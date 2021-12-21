@@ -21,6 +21,7 @@ export fn start() void {
         .landed = 0,
     };
     ScaledDrawer.SCALE = 0.5;
+    World.generate();
 }
 
 export fn update() void {
