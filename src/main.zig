@@ -3,6 +3,7 @@ const Ship = @import("lander.zig").Ship;
 const Doge = @import("doge_meteor.zig").Doge;
 const utils = @import("utils.zig");
 const World = @import("world.zig");
+const ScaledDrawer = @import("scaled_drawer.zig");
 
 var frame: u32 = 0;
 var doges: [2]Doge = undefined;
@@ -19,6 +20,7 @@ export fn start() void {
         .theta = 0,
         .landed = 0,
     };
+    ScaledDrawer.SCALE = 0.5;
 }
 
 export fn update() void {

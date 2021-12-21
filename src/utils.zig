@@ -1,6 +1,7 @@
 const std = @import("std");
 const math = std.math;
 const w4 = @import("wasm4.zig");
+const ScaledDrawer = @import("scaled_drawer.zig");
 
 /// Represents a 2D vector with floating-point coordinates.
 pub fn Vec2(comptime T: type) type {
@@ -60,7 +61,7 @@ pub fn Line(comptime T: type) type {
         }
 
         pub fn draw(self: Line(T)) void {
-            w4.line(self.A.x, self.A.y, self.B.x, self.B.y);
+            ScaledDrawer.line(self.A.x, self.A.y, self.B.x, self.B.y);
         }
     };
 }

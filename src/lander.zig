@@ -2,6 +2,7 @@ const w4 = @import("wasm4.zig");
 const math = @import("std").math;
 const utils = @import("utils.zig");
 const Vec2 = utils.Vec2;
+const ScaledDrawer = @import("scaled_drawer.zig");
 
 const GRAVITY = 0.0005;
 const TURN_POWER = 0.1;
@@ -96,7 +97,7 @@ pub const Ship = struct {
         for (realPoints) |_, i| {
             var cur = realPoints[i];
             var next = realPoints[(i + 1) % 3];
-            w4.line(cur.x, cur.y, next.x, next.y);
+            ScaledDrawer.line(cur.x, cur.y, next.x, next.y);
         }
     }
 };
