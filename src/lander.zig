@@ -53,6 +53,7 @@ pub const Ship = struct {
         }
         if (self.landed == 2) {
             w4.text("Failed!", 10, 10);
+            w4.text("abcdefghijklmnopqrstuvwxyz!", 0, 30);
             return;
         }
 

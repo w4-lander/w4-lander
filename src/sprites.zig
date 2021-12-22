@@ -1,4 +1,5 @@
 const w4 = @import("wasm4.zig");
+const utils = @import("utils.zig");
 
 /// Represents a sprite object with information used for blitting.
 pub const Sprite = struct {
@@ -18,3 +19,61 @@ pub const fuelSprite = Sprite{
     .height = 8,
     .byteArray = &[32]u8{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x54, 0x00, 0x00, 0x40, 0x40, 0x00, 0x10, 0x40, 0x54, 0x44, 0x44, 0x40, 0x40, 0x44, 0x50, 0x40, 0x40, 0x54, 0x54, 0x40 },
 };
+
+
+// Ex. Sprite representation: letter 'b'
+// How it's stored as a byte array
+// x|_|_|_|
+// x|_|_|_|
+// x|x|x|_|
+// x|_|x|_|
+// x|x|x|_|
+// _|_|_|_|
+// _|_|_|_|
+// 
+// Note how the width has to be divisible by 4.
+// We only care about the first three columns though, so we will call w4.blitSub() to extract the desired grid of pixels
+
+// struct for character sprite. Attributes are closely related to parameters in w4.blitSub()
+// See here: https://wasm4.org/docs/reference/functions#blitsub-spriteptr-x-y-width-height-srcx-srcy-stride-flags
+pub const CharSprite = struct {
+    byteArray: [*]const u8,
+    width: i32 = 3, // width of character, a.k.a. the columns of the byteArray that we actually care about
+    height: i32 = 7,
+    stride: i32 = 4,
+};
+
+pub const charSpriteArray = [_]CharSprite{
+    CharSprite{ // '0'
+        .byteArray = &[7]u8{ 0x54,0x44,0x44,0x44,0x54,0x00,0x00 }
+    },
+    CharSprite{ // '1'
+        .byteArray = &[7]u8{ 0x40,0x40,0x40,0x40,0x40,0x00,0x00 }
+    },
+    CharSprite{ // '2'
+        .byteArray = &[7]u8{ 0x54,0x04,0x54,0x40,0x54,0x00,0x00 }
+    },
+    CharSprite{ // '3'
+        .byteArray = &[7]u8{ 0x54,0x04,0x54,0x04,0x54,0x00,0x00 }
+    },
+    CharSprite{ // '4'
+        .byteArray = &[7]u8{ 0x44,0x44,0x54,0x04,0x04,0x00,0x00 }
+    },
+    CharSprite{ // '5'
+        .byteArray = &[7]u8{ 0x54,0x40,0x54,0x04,0x54,0x00,0x00 }
+    },
+    CharSprite{ // '6'
+        .byteArray = &[7]u8{ 0x54,0x40,0x54,0x44,0x54,0x00,0x00 }
+    },
+    CharSprite{ // '7'
+        .byteArray = &[7]u8{ 0x54,0x04,0x04,0x04,0x04,0x00,0x00 }
+    },
+    CharSprite{ // '8'
+        .byteArray = &[7]u8{ 0x54,0x44,0x54,0x44,0x54,0x00,0x00 }
+    },
+    CharSprite{ // '9'
+        .byteArray = &[7]u8{ 0x54,0x44,0x54,0x04,0x54,0x00,0x00 }
+    },
+};
+
+

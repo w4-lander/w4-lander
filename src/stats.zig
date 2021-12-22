@@ -3,6 +3,8 @@
 const w4 = @import("wasm4.zig");
 const sprites = @import("sprites.zig");
 const utils = @import("utils.zig");
+const CharSprite = @import("sprites.zig").CharSprite;
+const charSpriteArray = @import("sprites.zig").charSpriteArray;
 
 const STAT_NAME_X_POS = 114;
 const STAT_VAL_X_POS = 146;
@@ -24,29 +26,19 @@ pub const Stat = struct {
         ///Draws Stat to be displayed
         pub fn draw(self: Stat) void {
             w4.DRAW_COLORS.* = 0x4230;
-            w4.blit(
-                self.sprite.byteArray,
-                STAT_NAME_X_POS,
-                self.y,
-                self.sprite.width,
-                self.sprite.height,
-                w4.BLIT_2BPP,
-            );
-            var buf = [3]u8{0x00, 0x00, 0x00};
-            var buff = utils.intToString(self.stat, &buf);
-            draw_digit(buff, STAT_VAL_X_POS, self.y + 3);
+            draw_char('3', STAT_NAME_X_POS, self.y);
         }
     };
 
 
 pub fn initialize() void {
     altitude = Stat {
-        .stat = 100,
+        .stat = 3,
         .y = 0,
         .sprite = sprites.altitudeSprite,
     };
     fuel = Stat {
-        .stat = 100,
+        .stat = 3,
         .y = 7,
         .sprite = sprites.fuelSprite,
     };
@@ -55,49 +47,25 @@ pub fn initialize() void {
 pub fn draw() void {
     altitude.draw();
     fuel.draw();
+    // utils.log("sprite array = {}", .{charSpriteArray[0].width});
 }
 
-fn draw_num(buff: []const u8, x: i32, y: i32) void {
-    for (buff) |cc| {
-        draw_digit(cc, x, y);
-    }
-}
 
-fn draw_digit(c: u8, x: i32, y: i32) void {
-    w4.DRAW_COLORS.* = 0x0043;
-    if (c == '1') {
-        w4.vline(x, y, 5);
-    }
-    else if (c == '2') {
-        w4.hline(x, y, 3);
-        w4.vline(x+2, y, 3);
-        w4.hline(x, y+2, 3);
-        w4.vline(x, y+2, 3);
-        w4.hline(x, y+4, 3);
-    }
-    else if (c == '3') {
-        // TODO: finish rest of drawing logic for digits
-        w4.vline(x, y, 5);
-    }
-    else if (c == '4') {
-        w4.vline(x, y, 5);
-    }
-    else if (c == '5') {
-        w4.vline(x, y, 5);
-    }
-    else if (c == '6') {
-        w4.vline(x, y, 5);
-    }
-    else if (c == '7') {
-        w4.vline(x, y, 5);
-    }
-    else if (c == '8') {
-        w4.vline(x, y, 5);
-    }
-    else if (c == '9') {
-        w4.vline(x, y, 5);
-    }
-    else if (c == '0') {
-        w4.vline(x, y, 5);
-    }
+/// Draws a lower-case, alphanumeric character c at position (x, y).
+/// Every character is displayed with a m x 7 grid of pixels, where we manually create them in sprites.zig.
+/// Position (x, y) would then correspond to the top-left corner of this grid of pixels.
+fn draw_char(c: u8, x: i32, y: i32) void {
+    var index: usize = utils.charToDigit(c);
+    const sprite = charSpriteArray[index];
+    w4.blitSub(
+        sprite.byteArray,
+        x,
+        y,
+        sprite.width,
+        sprite.height,
+        0,
+        0,
+        sprite.stride,
+        w4.BLIT_2BPP,
+    );
 }
