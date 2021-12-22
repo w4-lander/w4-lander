@@ -69,6 +69,12 @@ pub fn Line(comptime T: type) type {
     };
 }
 
+
+/// courtesy of https://github.com/ziglang/zig/issues/4142
+pub fn intToString(int: i32, buf: []u8) ![]const u8 {
+    return try std.fmt.bufPrint(buf, "{}", .{int});
+}
+
 /// Prints a formatted message to the debug console.
 pub fn log(comptime fmt: []const u8, args: anytype) void {
     var buf: [512]u8 = undefined;
