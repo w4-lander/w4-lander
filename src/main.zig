@@ -4,6 +4,7 @@ const Doge = @import("doge_meteor.zig").Doge;
 const utils = @import("utils.zig");
 const World = @import("world.zig");
 const ScaledDrawer = @import("scaled_drawer.zig");
+const Stats = @import("stats.zig");
 
 var frame: u32 = 0;
 var doges: [2]Doge = undefined;
@@ -20,6 +21,7 @@ export fn start() void {
         .theta = 0,
         .landed = 0,
     };
+    Stats.initialize();
     ScaledDrawer.SCALE = 0.5;
     World.generate();
 }
@@ -28,7 +30,7 @@ export fn update() void {
     if (@mod(frame, 60) == 0) {
         utils.log("Current frame = {}", .{frame});
     }
-
+    Stats.draw();
     ship.update();
     if (@mod(frame, 10) == 0) {
         for (doges) |*doge| {
