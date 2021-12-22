@@ -69,14 +69,6 @@ pub fn Line(comptime T: type) type {
     };
 }
 
-
-/// Represents a sprite object with information used for blitting.
-pub const Sprite = struct {
-    width: i32,
-    height: i32,
-    byteArray: [*]const u8,
-};
-
 /// Prints a formatted message to the debug console.
 pub fn log(comptime fmt: []const u8, args: anytype) void {
     var buf: [512]u8 = undefined;
