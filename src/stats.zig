@@ -1,6 +1,7 @@
 //! On screen, display stats such as altitude, angular direction, velocity, fuel, etc.
 
 const w4 = @import("wasm4.zig");
+const std = @import("std");
 const sprites = @import("sprites.zig");
 const utils = @import("utils.zig");
 const CharSprite = @import("sprites.zig").CharSprite;
@@ -14,32 +15,45 @@ var fuel: Stat = undefined;
 
 /// Represents a Sat with floating-point coordinates.
 pub const Stat = struct {
-        stat: i32,
+        name: []const u8 = "Stat",
+        value: i32,
         y: i32,
         sprite: sprites.Sprite,
 
         /// Initialize a new Stat.
-        pub fn init(stat: i32, y: i32, index: i32) Stat {
-            return .{ .stat = stat, .y = y, .index = index };
+        pub fn init(value: i32, y: i32, index: i32) Stat {
+            return .{ .value = value, .y = y, .index = index };
         }
 
-        ///Draws Stat to be displayed
+        /// Draws Stat to be displayed
         pub fn draw(self: Stat) void {
             w4.DRAW_COLORS.* = 0x4230;
-            draw_char('3', STAT_NAME_X_POS, self.y);
+            // display text of stat name
+            blit_text(self.name, STAT_NAME_X_POS, self.y);
+            // TODO: display self.value as well
+            // 1. convert stat to u8 array representation
+            // var slice = std.fmt.comptimePrint("{}", .{42});
+            // var array = [_]u8{ '0', '2'};
+            // 2. convert array to slice
+            // const slice = array[0..array.len];
+            // 3. call blit_text on slice
+            // blit_text(slice, STAT_NAME_X_POS, self.y);
         }
     };
 
 
 pub fn initialize() void {
+    // TODO: change name of stats after adding letter sprites
     altitude = Stat {
-        .stat = 3,
-        .y = 0,
+        .name = "altitude",
+        .value = 3,
+        .y = 1,
         .sprite = sprites.altitudeSprite,
     };
     fuel = Stat {
-        .stat = 3,
-        .y = 7,
+        .name = "fuel",
+        .value = 3,
+        .y = 8,
         .sprite = sprites.fuelSprite,
     };
 }
@@ -47,14 +61,20 @@ pub fn initialize() void {
 pub fn draw() void {
     altitude.draw();
     fuel.draw();
-    // utils.log("sprite array = {}", .{charSpriteArray[0].width});
 }
 
+/// Blits a string text at position (x, y). Function blit_char describes how characters are blit.
+fn blit_text(text: []const u8, x: i32, y: i32) void {
+    var cur_x = x;
+    for (text) |char| {
+        cur_x += (blit_char(char, cur_x, y) + 1);
+    }
+}
 
 /// Draws a lower-case, alphanumeric character c at position (x, y).
 /// Every character is displayed with a m x 7 grid of pixels, where we manually create them in sprites.zig.
 /// Position (x, y) would then correspond to the top-left corner of this grid of pixels.
-fn draw_char(c: u8, x: i32, y: i32) void {
+fn blit_char(c: u8, x: i32, y: i32) i32 {
     var index: usize = utils.charToDigit(c);
     const sprite = charSpriteArray[index];
     w4.blitSub(
@@ -68,4 +88,5 @@ fn draw_char(c: u8, x: i32, y: i32) void {
         sprite.stride,
         w4.BLIT_2BPP,
     );
+    return sprite.width;
 }
