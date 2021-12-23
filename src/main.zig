@@ -30,7 +30,6 @@ export fn update() void {
     if (@mod(frame, 60) == 0) {
         utils.log("Current frame = {}", .{frame});
     }
-    Stats.draw();
     ship.update();
     if (@mod(frame, 10) == 0) {
         for (doges) |*doge| {
@@ -42,6 +41,13 @@ export fn update() void {
     for (doges) |*doge| {
         doge.draw();
     }
+
+    // update stats
+    // TODO: actually compute altitude instead of screen_height minus ship.pos.y lol
+    if (@mod(frame, 15) == 0) {
+        Stats.update(@floatToInt(i32, 160 - ship.pos.y));
+    }
+    Stats.draw();
 
     frame += 1;
 }

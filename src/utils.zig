@@ -69,6 +69,22 @@ pub fn Line(comptime T: type) type {
     };
 }
 
+pub fn intToUsize(c: i32) usize {
+    return switch (c) {
+        0 => 0,
+        1 => 1,
+        2 => 2,
+        3 => 3,
+        4 => 4,
+        5 => 5,
+        6 => 6,
+        7 => 7,
+        8 => 8,
+        9 => 9,
+        else => math.maxInt(u8),
+    };
+}
+
 pub fn charToDigit(c: u8) usize {
     return switch (c) {
         '0'...'9' => c - '0',
