@@ -71,9 +71,9 @@ pub fn Line(comptime T: type) type {
 
 pub fn charToDigit(c: u8) usize {
     return switch (c) {
-        '0' ... '9' => c - '0',
+        '0'...'9' => c - '0',
         // 'A' ... 'Z' => c - 'A' + 10,
-        'a' ... 'z' => c - 'a' + 10,
+        'a'...'z' => c - 'a' + 10,
         else => math.maxInt(u8),
     };
 }

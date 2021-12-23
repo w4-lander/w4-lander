@@ -15,42 +15,33 @@ var fuel: Stat = undefined;
 
 /// Represents a Sat with floating-point coordinates.
 pub const Stat = struct {
-        name: []const u8 = "Stat",
-        value: i32,
-        y: i32,
-        sprite: sprites.Sprite,
+    name: []const u8 = "Stat",
+    value: i32,
+    y: i32,
+    sprite: sprites.Sprite,
 
-        /// Initialize a new Stat.
-        pub fn init(value: i32, y: i32, index: i32) Stat {
-            return .{ .value = value, .y = y, .index = index };
-        }
+    /// Initialize a new Stat.
+    pub fn init(value: i32, y: i32, index: i32) Stat {
+        return .{ .value = value, .y = y, .index = index };
+    }
 
-        /// Draws Stat to be displayed
-        pub fn draw(self: Stat) void {
-            w4.DRAW_COLORS.* = 0x4230;
-            // display text of stat name
-            blit_text(self.name, STAT_NAME_X_POS, self.y);
-            // TODO: display self.value as well
-            // 1. convert stat to u8 array representation
-            // var slice = std.fmt.comptimePrint("{}", .{42});
-            // var array = [_]u8{ '0', '2'};
-            // 2. convert array to slice
-            // const slice = array[0..array.len];
-            // 3. call blit_text on slice
-            // blit_text(slice, STAT_NAME_X_POS, self.y);
-        }
-    };
-
+    /// Draws Stat to be displayed
+    pub fn draw(self: Stat) void {
+        w4.DRAW_COLORS.* = 0x4230;
+        // display text of stat name
+        blit_text(self.name, STAT_NAME_X_POS, self.y);
+        // TODO: display self.value as well
+    }
+};
 
 pub fn initialize() void {
-    // TODO: change name of stats after adding letter sprites
-    altitude = Stat {
+    altitude = Stat{
         .name = "altitude",
         .value = 3,
         .y = 1,
         .sprite = sprites.altitudeSprite,
     };
-    fuel = Stat {
+    fuel = Stat{
         .name = "fuel",
         .value = 3,
         .y = 8,
