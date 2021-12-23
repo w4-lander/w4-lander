@@ -30,7 +30,6 @@ pub const Stat = struct {
         w4.DRAW_COLORS.* = 0x4230;
         // display text of stat name
         blit_text(self.name, STAT_NAME_X_POS, self.y);
-        // TODO: display self.value as well
         blit_integer(self.value, STAT_VAL_X_POS, self.y);
     }
 };
