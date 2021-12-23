@@ -69,6 +69,20 @@ pub fn Line(comptime T: type) type {
     };
 }
 
+pub fn charToDigit(c: u8) usize {
+    return switch (c) {
+        '0'...'9' => c - '0',
+        // 'A' ... 'Z' => c - 'A' + 10,
+        'a'...'z' => c - 'a' + 10,
+        else => math.maxInt(u8),
+    };
+}
+
+/// courtesy of https://github.com/ziglang/zig/issues/4142
+pub fn intToString(int: i32, buf: []u8) ![]const u8 {
+    return try std.fmt.bufPrint(buf, "{}", .{int});
+}
+
 /// Prints a formatted message to the debug console.
 pub fn log(comptime fmt: []const u8, args: anytype) void {
     var buf: [512]u8 = undefined;
